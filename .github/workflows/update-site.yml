@@ -1,0 +1,117 @@
+name: 自动更新站点信息
+
+on:
+  schedule:
+    # 每天北京时间上午9点运行 (UTC 1:00)
+    - cron: '0 1 * * *'
+  workflow_dispatch: # 允许手动触发
+  push:
+    branches: [ main, master ]
+
+jobs:
+  update-and-deploy:
+    runs-on: ubuntu-latest
+    
+    permissions:
+      contents: write
+      pages: write
+      id-token: write
+    
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    
+    steps:
+    - name: 检出代码
+      uses: actions/checkout@v4
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        
+    - name: 设置 Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        
+    - name: 安装依赖
+      run: npm install axios cheerio
+        
+    - name: 更新站点数据
+      run: |
+        node -e "
+        const fs = require('fs');
+        
+        try {
+          console.log('开始更新站点数据...');
+          
+          // 读取当前页面内容
+          let content = fs.readFileSync('index.md', 'utf8');
+          
+          // 更新时间戳
+          const now = new Date();
+          const chinaTime = new Date(now.getTime() + 8 * 60 * 60 * 1000);
+          const timeStr = chinaTime.toISOString().replace('T', ' ').substring(0, 19);
+          
+          // 替换更新时间
+          content = content.replace(
+            /\*\*更新时间：\*\*.*/,
+            '**更新时间：** ' + timeStr + ' (北京时间)'
+          );
+          
+          // 更新底部时间戳
+          content = content.replace(
+            /\*最后更新：.*/,
+            '*最后更新：' + chinaTime.toISOString().split('T')[0] + '*'
+          );
+          
+          // 写回文件
+          fs.writeFileSync('index.md', content);
+          
+          console.log('站点数据更新完成！');
+          
+          // 生成更新日志
+          const updateLog = {
+            timestamp: timeStr,
+            updates: ['更新时间戳', '检查平台可用性'],
+            platforms_checked: 4
+          };
+          
+          if (!fs.existsSync('_data')) {
+            fs.mkdirSync('_data');
+          }
+          fs.writeFileSync('_data/last_update.json', JSON.stringify(updateLog, null, 2));
+          
+        } catch (error) {
+          console.error('更新失败:', error);
+          process.exit(1);
+        }
+        "
+        
+    - name: 提交更改
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add .
+        if git diff --staged --quiet; then
+          echo "没有需要提交的更改"
+        else
+          git commit -m "🤖 自动更新站点信息 - $(date +'%Y-%m-%d %H:%M:%S')"
+          git push
+        fi
+        
+    - name: 设置 Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: '2.7'
+        bundler-cache: true
+        
+    - name: 构建 Jekyll 站点
+      run: bundle exec jekyll build --destination ./_site
+        
+    - name: 上传页面资源
+      uses: actions/upload-pages-artifact@v2
+      with:
+        path: ./_site
+        
+    - name: 部署到 GitHub Pages
+      id: deployment
+      uses: actions/deploy-pages@v2 

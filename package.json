@@ -1,0 +1,39 @@
+{
+  "name": "xiaohongshu-ai-scraper",
+  "version": "1.0.0",
+  "description": "小红书AI话题每日自动采集系统",
+  "main": "daily_ai_scraper.js",
+  "scripts": {
+    "start": "node daily_ai_scraper.js",
+    "test": "node daily_ai_scraper.js test",
+    "upload": "node daily_ai_scraper.js upload",
+    "setup": "node daily_ai_scraper.js setup",
+    "install-deps": "npm install",
+    "install-playwright": "npx playwright install chromium"
+  },
+  "keywords": [
+    "xiaohongshu",
+    "ai",
+    "scraper",
+    "automation",
+    "feishu",
+    "data-collection"
+  ],
+  "author": "AI Assistant",
+  "license": "MIT",
+  "dependencies": {
+    "playwright": "^1.53.2"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "local"
+  },
+  "os": [
+    "win32",
+    "linux",
+    "darwin"
+  ]
+}

@@ -1,0 +1,116 @@
+name: 📱 小红书AI话题每日采集
+
+on:
+  # 定时运行：每天北京时间上午9点（UTC时间凌晨1点）
+  schedule:
+    - cron: '0 1 * * *'
+  
+  # 允许手动触发
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: '运行模式'
+        required: true
+        default: 'run'
+        type: choice
+        options:
+        - run
+        - test
+        - upload
+
+  # 推送到main分支时触发（仅用于测试）
+  push:
+    branches: [ main ]
+    paths:
+      - '.github/workflows/daily-ai-scraper.yml'
+      - '*.js'
+
+env:
+  NODE_ENV: production
+  TZ: Asia/Shanghai
+
+jobs:
+  scrape-ai-topics:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    
+    steps:
+    - name: 📥 检出代码
+      uses: actions/checkout@v4
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+    
+    - name: 🔧 设置Node.js环境
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+    
+    - name: 📦 安装依赖
+      run: |
+        npm ci
+        npx playwright install chromium
+    
+    - name: 🔑 配置环境变量
+      run: |
+        echo "HEADLESS=true" >> $GITHUB_ENV
+        echo "GITHUB_ACTIONS=true" >> $GITHUB_ENV
+        echo "FEISHU_SHEET_ID=${{ secrets.FEISHU_SHEET_ID }}" >> $GITHUB_ENV
+    
+    - name: 📂 创建数据目录
+      run: |
+        mkdir -p data
+        
+    - name: 🤖 运行AI话题采集
+      id: scraping
+      run: |
+        MODE="${{ github.event.inputs.mode || 'run' }}"
+        echo "运行模式: $MODE"
+        
+        if [ "$MODE" = "test" ]; then
+          node daily_ai_scraper.js test
+        else
+          node daily_ai_scraper.js
+        fi
+      env:
+        FEISHU_SHEET_ID: ${{ secrets.FEISHU_SHEET_ID }}
+    
+    - name: 📊 生成运行报告
+      if: always()
+      run: |
+        echo "## 🤖 小红书AI话题采集报告" > run-report.md
+        echo "" >> run-report.md
+        echo "**运行时间:** $(date)" >> run-report.md
+        echo "**运行模式:** ${{ github.event.inputs.mode || 'auto' }}" >> run-report.md
+        echo "" >> run-report.md
+        
+        if [ -f "data/daily_scraper.log" ]; then
+          echo "### 📋 运行日志" >> run-report.md
+          echo "\`\`\`" >> run-report.md
+          tail -20 data/daily_scraper.log >> run-report.md
+          echo "\`\`\`" >> run-report.md
+        fi
+    
+    - name: 📤 上传运行产物
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: scraping-results-${{ github.run_number }}
+        path: |
+          data/
+          run-report.md
+        retention-days: 30
+    
+    - name: 📧 通知结果
+      if: always()
+      run: |
+        if [ "${{ job.status }}" = "success" ]; then
+          echo "✅ AI话题采集任务成功完成"
+        else
+          echo "❌ AI话题采集任务失败"
+        fi
+        
+        if [ -f "data/xiaohongshu_ai_topics_*.csv" ]; then
+          echo "📊 生成的CSV文件可在Artifacts中下载"
+          echo "🔗 飞书表格地址: https://a7uxmstk6o.feishu.cn/base/YUt2bN2O3akgyts2vFdcHFFqneg"
+        fi 
