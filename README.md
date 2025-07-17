@@ -1,12 +1,15 @@
 # Claude Code 使用指南
 
 <div align="center">
-    <h1>🚀 Claude Code 镜像站使用教程</h1>
-    <p>快速、准确、强大的 AI 编程助手</p>
-    
-    <a href="https://gaccode.cc/"><img src="https://img.shields.io/badge/Claude_Code-镜像站-blue?style=for-the-badge"></a>
-    <a href="#安装教程"><img src="https://img.shields.io/badge/安装-教程-green?style=for-the-badge"></a>
-    <a href="#使用方法"><img src="https://img.shields.io/badge/使用-方法-orange?style=for-the-badge"></a>
+
+# 🚀 Claude Code 镜像站使用教程
+
+快速、准确、强大的 AI 编程助手
+
+[![Claude Code 镜像站](https://img.shields.io/badge/Claude_Code-镜像站-blue?style=for-the-badge)](https://gaccode.cc/)
+[![安装教程](https://img.shields.io/badge/安装-教程-green?style=for-the-badge)](#安装教程)
+[![使用方法](https://img.shields.io/badge/使用-方法-orange?style=for-the-badge)](#使用方法)
+
 </div>
 
 ## 📖 项目简介
