@@ -1,0 +1,77 @@
+title: "Claude Code 使用指南"
+description: "快速、准确、强大的 AI 编程助手 - 完整的安装和使用教程"
+baseurl: ""
+url: "https://xianyu110.github.io/claude-code"
+
+# 构建设置
+markdown: kramdown
+highlighter: rouge
+theme: minima
+
+# 插件
+plugins:
+  - jekyll-feed
+  - jekyll-sitemap
+  - jekyll-seo-tag
+
+# 社交链接
+github_username: xianyu110
+author:
+  name: "Claude Code Community"
+  email: "coder-maynor@example.com"
+
+# SEO 设置
+lang: zh-CN
+timezone: Asia/Shanghai
+
+# 导航
+navigation:
+  - title: "首页"
+    url: "/"
+  - title: "安装教程"
+    url: "/#installation"
+  - title: "使用方法"
+    url: "/#usage"
+  - title: "常见问题"
+    url: "/#faq"
+  - title: "联系支持"
+    url: "/#contact"
+
+# 网站信息
+google_analytics: # 如果需要可以添加
+show_excerpts: true
+show_downloads: false
+
+# 排除文件
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - node_modules
+  - vendor/bundle/
+  - vendor/cache/
+  - vendor/gems/
+  - vendor/ruby/
+
+# 包含文件
+include:
+  - _pages
+
+# 分页设置
+paginate: 10
+paginate_path: "/page:num/"
+
+# kramdown设置
+kramdown:
+  input: GFM
+  hard_wrap: false
+  auto_ids: true
+  footnote_nr: 1
+  entity_output: as_char
+  toc_levels: 1..6
+  smart_quotes: lsquo,rsquo,ldquo,rdquo
+  enable_coderay: false
+
+# 安全配置
+safe: true
+incremental: false
+strict_front_matter: false 
