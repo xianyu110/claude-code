@@ -1,248 +1,519 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // DOM Elements
-    const tokenInput = document.getElementById('token-input');
-    const cdkInput = document.getElementById('cdk-input');
-    const verifyBtn = document.querySelector('.verify-btn');
-    const cdkBuyBtn = document.querySelector('.cdk-buy-btn');
-    const modal = document.getElementById('message-modal');
-    const modalMessage = document.getElementById('modal-message');
-    const closeModal = document.querySelector('.close');
-    const logsContainer = document.getElementById('logs-container');
-
-    // Account info elements
-    const userEmail = document.getElementById('user-email');
-    const subscriptionStatus = document.getElementById('subscription-status');
-    const expiryDate = document.getElementById('expiry-date');
-
-    // Account data structure
-    let accountData = {
-        email: '',
-        isSubscribed: false,
-        expiryDate: null,
-        logs: []
-    };
-
-    // Initialize
-    init();
-
-    function init() {
-        // Load saved data from localStorage
-        loadAccountData();
-        updateAccountDisplay();
-        setupEventListeners();
-    }
-
-    function setupEventListeners() {
-        // Verify button click
-        verifyBtn.addEventListener('click', handleVerify);
-        
-        // CDK buy button click
-        cdkBuyBtn.addEventListener('click', handleCDKPurchase);
-        
-        // Modal close
-        closeModal.addEventListener('click', hideModal);
-        
-        // Close modal when clicking outside
-        window.addEventListener('click', function(event) {
-            if (event.target === modal) {
-                hideModal();
-            }
-        });
-
-        // Input validation
-        tokenInput.addEventListener('input', validateTokenInput);
-        cdkInput.addEventListener('input', validateCDKInput);
-
-        // Enter key handling
-        tokenInput.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                handleVerify();
-            }
-        });
-
-        cdkInput.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                handleVerify();
-            }
-        });
-    }
-
-    function validateTokenInput() {
-        const token = tokenInput.value.trim();
-        if (token.length > 0) {
-            tokenInput.style.borderColor = '#10b981';
-        } else {
-            tokenInput.style.borderColor = '#e5e7eb';
-        }
-    }
-
-    function validateCDKInput() {
-        const cdk = cdkInput.value.trim();
-        if (cdk.length > 0) {
-            cdkInput.style.borderColor = '#10b981';
-        } else {
-            cdkInput.style.borderColor = '#e5e7eb';
-        }
-    }
-
-    function handleVerify() {
-        const token = tokenInput.value.trim();
-        const cdk = cdkInput.value.trim();
-
-        // Validation
-        if (!token) {
-            showModal('错误', '请输入账户令牌', 'error');
-            return;
-        }
-
-        if (!cdk) {
-            showModal('错误', '请输入CDK密钥', 'error');
-            return;
-        }
-
-        // Simulate verification process
-        verifyBtn.disabled = true;
-        verifyBtn.textContent = '验证中...';
-
-        setTimeout(() => {
-            // Simulate verification result
-            const success = Math.random() > 0.3; // 70% success rate simulation
-
-            if (success) {
-                // Update account data
-                accountData.email = token.includes('@') ? token : `${token.substring(0, 8)}***@gmail.com`;
-                accountData.isSubscribed = true;
-                accountData.expiryDate = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000); // 30 days from now
-                
-                // Add log entry
-                addLogEntry('卡密充值成功', 'ChatGPT Plus 订阅已成功激活');
-                
-                // Save and update display
-                saveAccountData();
-                updateAccountDisplay();
-                
-                // Clear inputs
-                tokenInput.value = '';
-                cdkInput.value = '';
-                
-                showModal('充值成功', '卡密充值成功！您的ChatGPT Plus订阅已激活', 'success');
-            } else {
-                addLogEntry('卡密充值失败', '无效的卡密或网络异常，请重试');
-                showModal('充值失败', '卡密充值失败，请检查卡密是否正确，或多提交几次重试', 'error');
-            }
-
-            verifyBtn.disabled = false;
-            verifyBtn.textContent = '立即充值';
-        }, 2000);
-    }
-
-    function handleCDKPurchase() {
-        showModal('联系客服', '请联系客服购买卡密：\n\n客服QQ: 1002569303\n\n直接转账免手续费，24小时在线服务', 'info');
-    }
-
-    function showModal(title, message, type = 'info') {
-        const icon = type === 'success' ? '✅' : type === 'error' ? '❌' : 'ℹ️';
-        modalMessage.innerHTML = `<h3>${icon} ${title}</h3><p style="margin-top: 15px; line-height: 1.6;">${message.replace(/\n/g, '<br>')}</p>`;
-        modal.style.display = 'block';
-        
-        // Auto close success messages after 3 seconds
-        if (type === 'success') {
-            setTimeout(hideModal, 3000);
-        }
-    }
-
-    function hideModal() {
-        modal.style.display = 'none';
-    }
-
-    function addLogEntry(action, description) {
-        const timestamp = new Date().toLocaleString('zh-CN');
-        const logEntry = {
-            timestamp,
-            action,
-            description
-        };
-        
-        accountData.logs.unshift(logEntry); // Add to beginning
-        
-        // Keep only last 10 logs
-        if (accountData.logs.length > 10) {
-            accountData.logs = accountData.logs.slice(0, 10);
-        }
-        
-        updateLogsDisplay();
-    }
-
-    function updateLogsDisplay() {
-        if (accountData.logs.length === 0) {
-            logsContainer.innerHTML = '<p class="no-logs">暂无操作记录</p>';
-            return;
-        }
-
-        const logsHTML = accountData.logs.map(log => `
-            <div class="log-entry" style="padding: 10px; border-bottom: 1px solid #e5e7eb; margin-bottom: 8px;">
-                <div style="font-weight: 500; color: #374151; margin-bottom: 4px;">${log.action}</div>
-                <div style="font-size: 0.9rem; color: #6b7280; margin-bottom: 4px;">${log.description}</div>
-                <div style="font-size: 0.8rem; color: #9ca3af;">${log.timestamp}</div>
-            </div>
-        `).join('');
-
-        logsContainer.innerHTML = logsHTML;
-    }
-
-    function updateAccountDisplay() {
-        userEmail.textContent = accountData.email || '未登录';
-        subscriptionStatus.textContent = accountData.isSubscribed ? 'ChatGPT Plus 已激活' : '未订阅';
-        subscriptionStatus.style.color = accountData.isSubscribed ? '#10b981' : '#6b7280';
-        
-        if (accountData.expiryDate) {
-            expiryDate.textContent = accountData.expiryDate.toLocaleDateString('zh-CN');
-        } else {
-            expiryDate.textContent = '-';
-        }
-    }
-
-    function saveAccountData() {
-        // Convert dates to strings for JSON storage
-        const dataToSave = {
-            ...accountData,
-            expiryDate: accountData.expiryDate ? accountData.expiryDate.toISOString() : null
-        };
-        localStorage.setItem('gptplus_account', JSON.stringify(dataToSave));
-    }
-
-    function loadAccountData() {
-        const saved = localStorage.getItem('gptplus_account');
-        if (saved) {
-            try {
-                const parsed = JSON.parse(saved);
-                accountData = {
-                    ...parsed,
-                    expiryDate: parsed.expiryDate ? new Date(parsed.expiryDate) : null
-                };
-                updateLogsDisplay();
-            } catch (error) {
-                console.error('Failed to load account data:', error);
-            }
-        }
-    }
-
-    // Function to reset account data
-    window.resetAccount = function() {
-        accountData = {
-            email: '',
-            isSubscribed: false,
-            expiryDate: null,
-            logs: []
-        };
-        localStorage.removeItem('gptplus_account');
-        updateAccountDisplay();
-        updateLogsDisplay();
-        showModal('重置完成', '账户信息已重置', 'info');
-    };
-
-    // Add welcome log on first visit
-    if (accountData.logs.length === 0) {
-        addLogEntry('系统初始化', '欢迎使用ChatGPT Plus正规iOS代充服务');
-    }
+    // Initialize all functionality
+    initializeTabSwitching();
+    initializeCodeCopying();
+    initializeFAQAccordion();
+    initializeScrollAnimations();
+    initializeMethodCards();
+    initializeSmoothScrolling();
 });
+
+// Tab switching functionality
+function initializeTabSwitching() {
+    const tabButtons = document.querySelectorAll('.tab-button');
+    const tabPanes = document.querySelectorAll('.tab-pane');
+
+    tabButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const targetTab = this.getAttribute('data-tab');
+            
+            // Remove active class from all buttons and panes
+            tabButtons.forEach(btn => btn.classList.remove('active'));
+            tabPanes.forEach(pane => pane.classList.remove('active'));
+            
+            // Add active class to clicked button and corresponding pane
+            this.classList.add('active');
+            const targetPane = document.getElementById(targetTab);
+            if (targetPane) {
+                targetPane.classList.add('active');
+            }
+        });
+    });
+}
+
+// Code copying functionality
+function initializeCodeCopying() {
+    // Add copy buttons to code blocks that don't have them
+    const codeBlocks = document.querySelectorAll('.code-block');
+    codeBlocks.forEach(block => {
+        if (!block.querySelector('.copy-btn')) {
+            const copyBtn = document.createElement('button');
+            copyBtn.className = 'copy-btn';
+            copyBtn.textContent = '复制';
+            copyBtn.onclick = function() { copyCode(this); };
+            block.appendChild(copyBtn);
+        }
+    });
+}
+
+// Copy code function
+function copyCode(button) {
+    const codeBlock = button.closest('.code-block');
+    const code = codeBlock.querySelector('pre code') || codeBlock.querySelector('pre');
+    
+    if (code) {
+        const text = code.textContent || code.innerText;
+        
+        // Try to use the modern clipboard API
+        if (navigator.clipboard && window.isSecureContext) {
+            navigator.clipboard.writeText(text).then(() => {
+                showCopySuccess(button);
+            }).catch(() => {
+                fallbackCopyText(text, button);
+            });
+        } else {
+            fallbackCopyText(text, button);
+        }
+    }
+}
+
+// Fallback copy method for older browsers
+function fallbackCopyText(text, button) {
+    const textArea = document.createElement('textarea');
+    textArea.value = text;
+    textArea.style.position = 'fixed';
+    textArea.style.left = '-999999px';
+    textArea.style.top = '-999999px';
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+    
+    try {
+        document.execCommand('copy');
+        showCopySuccess(button);
+    } catch (err) {
+        console.error('Failed to copy text: ', err);
+        showCopyError(button);
+    }
+    
+    document.body.removeChild(textArea);
+}
+
+// Show copy success feedback
+function showCopySuccess(button) {
+    const originalText = button.textContent;
+    button.textContent = '已复制!';
+    button.style.background = '#10b981';
+    
+    setTimeout(() => {
+        button.textContent = originalText;
+        button.style.background = '';
+    }, 2000);
+}
+
+// Show copy error feedback
+function showCopyError(button) {
+    const originalText = button.textContent;
+    button.textContent = '复制失败';
+    button.style.background = '#ef4444';
+    
+    setTimeout(() => {
+        button.textContent = originalText;
+        button.style.background = '';
+    }, 2000);
+}
+
+// FAQ accordion functionality
+function initializeFAQAccordion() {
+    const faqQuestions = document.querySelectorAll('.faq-question');
+    
+    faqQuestions.forEach(question => {
+        question.addEventListener('click', function() {
+            const faqItem = this.closest('.faq-item');
+            const answer = faqItem.querySelector('.faq-answer');
+            
+            // Toggle current item
+            const isOpen = faqItem.classList.contains('open');
+            
+            // Close all FAQ items
+            document.querySelectorAll('.faq-item').forEach(item => {
+                item.classList.remove('open');
+                const ans = item.querySelector('.faq-answer');
+                if (ans) {
+                    ans.style.maxHeight = '0';
+                    ans.style.opacity = '0';
+                }
+            });
+            
+            // If this item wasn't open, open it
+            if (!isOpen) {
+                faqItem.classList.add('open');
+                if (answer) {
+                    answer.style.maxHeight = answer.scrollHeight + 'px';
+                    answer.style.opacity = '1';
+                }
+            }
+        });
+    });
+    
+    // Set initial styles for FAQ answers
+    document.querySelectorAll('.faq-answer').forEach(answer => {
+        answer.style.maxHeight = '0';
+        answer.style.opacity = '0';
+        answer.style.overflow = 'hidden';
+        answer.style.transition = 'max-height 0.3s ease, opacity 0.3s ease';
+    });
+}
+
+// Scroll animations
+function initializeScrollAnimations() {
+    // Intersection Observer for fade-in animations
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+    
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('fade-in');
+                observer.unobserve(entry.target);
+            }
+        });
+    }, observerOptions);
+    
+    // Observe all major sections
+    const sections = document.querySelectorAll('.intro-section, .methods-section, .method-detail, .tips-section, .faq-section, .summary-section');
+    sections.forEach(section => {
+        observer.observe(section);
+    });
+    
+    // Observe cards with staggered animation
+    const cards = document.querySelectorAll('.advantage-card, .method-card, .contact-item');
+    cards.forEach((card, index) => {
+        setTimeout(() => {
+            observer.observe(card);
+        }, index * 100);
+    });
+}
+
+// Method cards interaction
+function initializeMethodCards() {
+    const methodCards = document.querySelectorAll('.method-card');
+    
+    methodCards.forEach(card => {
+        card.addEventListener('click', function() {
+            const method = this.getAttribute('data-method');
+            const targetSection = document.getElementById(`method-${method}`);
+            
+            if (targetSection) {
+                // Smooth scroll to the target section
+                targetSection.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+                
+                // Add highlight effect
+                targetSection.style.boxShadow = '0 0 0 3px rgba(99, 102, 241, 0.3)';
+                setTimeout(() => {
+                    targetSection.style.boxShadow = '';
+                }, 2000);
+            }
+        });
+        
+        // Add hover effects
+        card.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-5px) scale(1.02)';
+        });
+        
+        card.addEventListener('mouseleave', function() {
+            this.style.transform = '';
+        });
+    });
+}
+
+// Smooth scrolling for anchor links
+function initializeSmoothScrolling() {
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        });
+    });
+}
+
+// Utility function to add loading states
+function addLoadingState(element, text = '加载中...') {
+    const originalContent = element.innerHTML;
+    element.innerHTML = `<span style="opacity: 0.6;">${text}</span>`;
+    element.disabled = true;
+    
+    return () => {
+        element.innerHTML = originalContent;
+        element.disabled = false;
+    };
+}
+
+// Contact info copy functionality
+function initializeContactCopy() {
+    const contactItems = document.querySelectorAll('.contact-item');
+    
+    contactItems.forEach(item => {
+        item.addEventListener('click', function() {
+            const contactValue = this.querySelector('.contact-info span');
+            if (contactValue) {
+                const text = contactValue.textContent;
+                
+                if (navigator.clipboard && window.isSecureContext) {
+                    navigator.clipboard.writeText(text).then(() => {
+                        showContactCopyFeedback(this, '已复制!');
+                    });
+                } else {
+                    fallbackCopyText(text, this);
+                }
+            }
+        });
+    });
+}
+
+// Show contact copy feedback
+function showContactCopyFeedback(element, message) {
+    const originalTransform = element.style.transform;
+    element.style.transform = 'scale(0.95)';
+    
+    // Create feedback element
+    const feedback = document.createElement('div');
+    feedback.textContent = message;
+    feedback.style.cssText = `
+        position: absolute;
+        top: -30px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #10b981;
+        color: white;
+        padding: 0.5rem 1rem;
+        border-radius: 0.375rem;
+        font-size: 0.875rem;
+        font-weight: 600;
+        z-index: 1000;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    `;
+    
+    element.style.position = 'relative';
+    element.appendChild(feedback);
+    
+    setTimeout(() => {
+        feedback.style.opacity = '1';
+    }, 10);
+    
+    setTimeout(() => {
+        feedback.style.opacity = '0';
+        setTimeout(() => {
+            if (feedback.parentNode) {
+                feedback.parentNode.removeChild(feedback);
+            }
+        }, 300);
+    }, 2000);
+    
+    setTimeout(() => {
+        element.style.transform = originalTransform;
+    }, 150);
+}
+
+// Activation code copy functionality
+function initializeActivationCodeCopy() {
+    const codeItems = document.querySelectorAll('.code-item');
+    
+    codeItems.forEach(item => {
+        item.addEventListener('click', function() {
+            const text = this.textContent;
+            
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(text).then(() => {
+                    showActivationCodeFeedback(this);
+                });
+            } else {
+                fallbackCopyText(text, this);
+            }
+        });
+    });
+}
+
+// Show activation code copy feedback
+function showActivationCodeFeedback(element) {
+    const originalBg = element.style.background;
+    const originalColor = element.style.color;
+    
+    element.style.background = '#10b981';
+    element.style.color = 'white';
+    element.textContent = '已复制!';
+    
+    setTimeout(() => {
+        element.style.background = originalBg;
+        element.style.color = originalColor;
+        // Restore original text - you might want to store this differently
+        element.textContent = element.getAttribute('data-original-text') || '激活码';
+    }, 2000);
+}
+
+// Add keyboard navigation
+function initializeKeyboardNavigation() {
+    document.addEventListener('keydown', function(e) {
+        // Escape key to close any open FAQ items
+        if (e.key === 'Escape') {
+            document.querySelectorAll('.faq-item.open').forEach(item => {
+                item.classList.remove('open');
+                const answer = item.querySelector('.faq-answer');
+                if (answer) {
+                    answer.style.maxHeight = '0';
+                    answer.style.opacity = '0';
+                }
+            });
+        }
+        
+        // Arrow keys for tab navigation
+        if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+            const activeTab = document.querySelector('.tab-button.active');
+            if (activeTab) {
+                const tabButtons = Array.from(document.querySelectorAll('.tab-button'));
+                const currentIndex = tabButtons.indexOf(activeTab);
+                let nextIndex;
+                
+                if (e.key === 'ArrowLeft') {
+                    nextIndex = currentIndex > 0 ? currentIndex - 1 : tabButtons.length - 1;
+                } else {
+                    nextIndex = currentIndex < tabButtons.length - 1 ? currentIndex + 1 : 0;
+                }
+                
+                tabButtons[nextIndex].click();
+                tabButtons[nextIndex].focus();
+                e.preventDefault();
+            }
+        }
+    });
+}
+
+// Initialize performance optimizations
+function initializePerformanceOptimizations() {
+    // Lazy load images if any
+    const images = document.querySelectorAll('img[data-src]');
+    if (images.length > 0) {
+        const imageObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const img = entry.target;
+                    img.src = img.dataset.src;
+                    img.removeAttribute('data-src');
+                    imageObserver.unobserve(img);
+                }
+            });
+        });
+        
+        images.forEach(img => imageObserver.observe(img));
+    }
+    
+    // Debounce scroll events
+    let scrollTimeout;
+    window.addEventListener('scroll', function() {
+        if (scrollTimeout) {
+            clearTimeout(scrollTimeout);
+        }
+        
+        scrollTimeout = setTimeout(() => {
+            // Add scroll-based effects here if needed
+        }, 10);
+    });
+}
+
+// Error handling
+window.addEventListener('error', function(e) {
+    console.error('JavaScript error:', e.error);
+    // You could add error reporting here
+});
+
+// Initialize additional features when DOM is ready
+document.addEventListener('DOMContentLoaded', function() {
+    initializeContactCopy();
+    initializeActivationCodeCopy();
+    initializeKeyboardNavigation();
+    initializePerformanceOptimizations();
+});
+
+// Utility functions for external use
+window.ClaudeCodeUtils = {
+    copyText: function(text) {
+        if (navigator.clipboard && window.isSecureContext) {
+            return navigator.clipboard.writeText(text);
+        } else {
+            return new Promise((resolve, reject) => {
+                try {
+                    const textArea = document.createElement('textarea');
+                    textArea.value = text;
+                    textArea.style.position = 'fixed';
+                    textArea.style.left = '-999999px';
+                    textArea.style.top = '-999999px';
+                    document.body.appendChild(textArea);
+                    textArea.focus();
+                    textArea.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(textArea);
+                    resolve();
+                } catch (err) {
+                    reject(err);
+                }
+            });
+        }
+    },
+    
+    scrollToElement: function(element) {
+        if (typeof element === 'string') {
+            element = document.querySelector(element);
+        }
+        if (element) {
+            element.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
+        }
+    },
+    
+    addNotification: function(message, type = 'info', duration = 3000) {
+        const notification = document.createElement('div');
+        notification.className = `notification notification-${type}`;
+        notification.textContent = message;
+        notification.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: ${type === 'success' ? '#10b981' : type === 'error' ? '#ef4444' : '#3b82f6'};
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            z-index: 10000;
+            opacity: 0;
+            transform: translateX(100%);
+            transition: all 0.3s ease;
+        `;
+        
+        document.body.appendChild(notification);
+        
+        setTimeout(() => {
+            notification.style.opacity = '1';
+            notification.style.transform = 'translateX(0)';
+        }, 10);
+        
+        setTimeout(() => {
+            notification.style.opacity = '0';
+            notification.style.transform = 'translateX(100%)';
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.parentNode.removeChild(notification);
+                }
+            }, 300);
+        }, duration);
+    }
+};
+
+// Export for module systems if needed
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = window.ClaudeCodeUtils;
+}
