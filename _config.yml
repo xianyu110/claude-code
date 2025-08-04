@@ -28,6 +28,9 @@ exclude:
   - Gemfile
   - Gemfile.lock
   - vendor/
+  - node_modules/
+  - new-tower-defense/
+  - "**/node_modules/"
 
 # 包含文件
 include:
