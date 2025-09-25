@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Claude Code 使用指南 - 快速、准确、强大的 AI 编程助手</title>
-    <meta name="description" content="Claude Code 镜像站使用教程，包含完整的安装指南、使用方法和常见问题解答">
-    <meta name="keywords" content="Claude Code, AI编程助手, 代码生成, 编程工具, 镜像站">
+    <title>Claude Code 完全使用指南：三种方式解锁最强AI编程助手</title>
+    <meta name="description" content="Claude Code 完全使用指南，支持自定义API接入、镜像站直连、官方合租方案。3行环境变量解锁百款顶级AI模型，成本降低50%以上">
+    <meta name="keywords" content="Claude Code, AI编程助手, 自定义API, GPT-4.1, Gemini, 镜像站, 合租方案">
     
     <!-- 引入GitHub Pages样式 -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.2.0/github-markdown-light.min.css" rel="stylesheet">
@@ -14,42 +14,85 @@
     
     <style>
         :root {
-            --primary-color: #2196F3;
-            --secondary-color: #4CAF50;
-            --warning-color: #FF9800;
-            --gradient-bg: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            --card-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            --primary-color: #667eea;
+            --secondary-color: #764ba2;
+            --accent-color: #f093fb;
+            --success-color: #4facfe;
+            --warning-color: #ffecd2;
+            --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gradient-secondary: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --gradient-accent: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --gradient-bg: linear-gradient(135deg, #ffecd2 0%, #fcb69f 25%, #667eea 50%, #764ba2 75%, #f093fb 100%);
+            --card-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            --card-shadow-hover: 0 20px 60px rgba(0,0,0,0.15);
+            --text-primary: #2d3748;
+            --text-secondary: #4a5568;
+            --border-radius: 20px;
+            --animation-speed: 0.3s;
         }
-        
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            line-height: 1.6;
-            color: #333;
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Inter', sans-serif;
+            line-height: 1.7;
+            color: var(--text-primary);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background-attachment: fixed;
             min-height: 100vh;
+            overflow-x: hidden;
         }
-        
+
+        /* 添加动态背景粒子效果 */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background:
+                radial-gradient(circle at 20% 50%, rgba(255,255,255,0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255,255,255,0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 80%, rgba(255,255,255,0.1) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: -1;
+            animation: float 20s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            33% { transform: translateY(-20px) rotate(1deg); }
+            66% { transform: translateY(10px) rotate(-1deg); }
+        }
+
         .container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 0 20px;
         }
-        
+
         .hero {
             background: var(--gradient-bg);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
             color: white;
-            padding: 80px 0;
+            padding: 120px 0;
             text-align: center;
             position: relative;
             overflow: hidden;
         }
-        
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
         .hero::before {
             content: '';
             position: absolute;
@@ -57,134 +100,276 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 300"><path d="M0,256L48,240C96,224,192,192,288,192C384,192,480,224,576,234.7C672,245,768,235,864,213.3C960,192,1056,160,1152,160C1248,160,1344,192,1392,208L1440,224V320H1392C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320H0V256Z" fill="rgba(255,255,255,0.1)"/></svg>') no-repeat bottom;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 300"><path d="M0,256L48,240C96,224,192,192,288,192C384,192,480,224,576,234.7C672,245,768,235,864,213.3C960,192,1056,160,1152,160C1248,160,1344,192,1392,208L1440,224V320H1392C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320H0V256Z" fill="rgba(255,255,255,0.05)"/></svg>') no-repeat bottom;
             background-size: cover;
         }
-        
+
+        /* 添加多个浮动元素 */
+        .hero::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+        }
+
+        .floating-icons {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .floating-icon {
+            position: absolute;
+            font-size: 2.5em;
+            opacity: 0.2;
+            animation: floatIcon 20s linear infinite;
+        }
+
+        .floating-icon:nth-child(1) { top: 15%; right: 8%; animation-delay: 0s; content: '🚀'; }
+        .floating-icon:nth-child(2) { top: 25%; left: 5%; animation-delay: -5s; content: '⚡'; }
+        .floating-icon:nth-child(3) { top: 60%; right: 15%; animation-delay: -10s; content: '💻'; }
+        .floating-icon:nth-child(4) { top: 45%; left: 10%; animation-delay: -15s; content: '🤖'; }
+
+        .floating-icon::before {
+            position: absolute;
+        }
+
+        .floating-icon:nth-child(1)::before { content: '🚀'; }
+        .floating-icon:nth-child(2)::before { content: '⚡'; }
+        .floating-icon:nth-child(3)::before { content: '💻'; }
+        .floating-icon:nth-child(4)::before { content: '🤖'; }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-30px); }
+            60% { transform: translateY(-15px); }
+        }
+
+        @keyframes floatIcon {
+            0%, 100% {
+                transform: translateY(0px) rotate(0deg) scale(1);
+                opacity: 0.2;
+            }
+            25% {
+                transform: translateY(-20px) rotate(5deg) scale(1.1);
+                opacity: 0.3;
+            }
+            50% {
+                transform: translateY(-10px) rotate(-3deg) scale(0.9);
+                opacity: 0.25;
+            }
+            75% {
+                transform: translateY(-25px) rotate(8deg) scale(1.05);
+                opacity: 0.15;
+            }
+        }
+
         .hero h1 {
-            font-size: 3.5em;
-            margin-bottom: 20px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-            position: relative;
-            z-index: 1;
-        }
-        
-        .hero p {
-            font-size: 1.3em;
+            font-size: clamp(2.5em, 5vw, 4em);
             margin-bottom: 30px;
-            opacity: 0.9;
+            text-shadow: 2px 2px 20px rgba(0,0,0,0.3);
             position: relative;
             z-index: 1;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            background: linear-gradient(45deg, #fff, #f0f8ff, #fff);
+            background-clip: text;
+            -webkit-background-clip: text;
+            animation: textShimmer 3s ease-in-out infinite;
         }
-        
+
+        @keyframes textShimmer {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .hero p {
+            font-size: clamp(1.1em, 2vw, 1.4em);
+            margin-bottom: 40px;
+            opacity: 0.95;
+            position: relative;
+            z-index: 1;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            font-weight: 300;
+        }
+
         .hero-buttons {
             display: flex;
             justify-content: center;
-            gap: 20px;
+            gap: 25px;
             flex-wrap: wrap;
             position: relative;
             z-index: 1;
         }
-        
+
         .btn {
-            display: inline-block;
-            padding: 15px 30px;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 18px 35px;
             text-decoration: none;
             border-radius: 50px;
             font-weight: 600;
-            transition: all 0.3s ease;
+            font-size: 1.1em;
+            transition: all var(--animation-speed) cubic-bezier(0.4, 0, 0.2, 1);
             text-align: center;
             position: relative;
             overflow: hidden;
+            border: 2px solid transparent;
+            backdrop-filter: blur(10px);
+            transform: translateY(0);
         }
-        
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
         .btn-primary {
-            background: white;
+            background: rgba(255,255,255,0.95);
             color: var(--primary-color);
             box-shadow: var(--card-shadow);
         }
-        
+
         .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 25px rgba(0,0,0,0.15);
-        }
-        
-        .btn-secondary {
-            background: transparent;
-            color: white;
-            border: 2px solid white;
-        }
-        
-        .btn-secondary:hover {
+            transform: translateY(-8px) scale(1.05);
+            box-shadow: var(--card-shadow-hover);
             background: white;
-            color: var(--primary-color);
-            transform: translateY(-2px);
         }
-        
+
+        .btn-secondary {
+            background: rgba(255,255,255,0.1);
+            color: white;
+            border: 2px solid rgba(255,255,255,0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255,255,255,0.2);
+            border-color: rgba(255,255,255,0.6);
+            transform: translateY(-8px) scale(1.05);
+            box-shadow: 0 15px 40px rgba(255,255,255,0.2);
+        }
+
         .content {
             background: white;
-            margin: -50px auto 0;
-            border-radius: 20px;
+            margin: -80px auto 0;
+            border-radius: var(--border-radius);
             box-shadow: var(--card-shadow);
             position: relative;
             z-index: 2;
             overflow: hidden;
         }
-        
+
+        .content::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: var(--gradient-primary);
+        }
+
         .markdown-body {
-            padding: 60px 50px;
+            padding: 80px 60px;
             max-width: none;
         }
-        
+
         .feature-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-            margin: 40px 0;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 35px;
+            margin: 50px 0;
         }
-        
+
         .feature-card {
-            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-            padding: 30px;
-            border-radius: 15px;
+            background: linear-gradient(135deg, #fff 0%, #f8fafc 100%);
+            padding: 40px 30px;
+            border-radius: var(--border-radius);
             text-align: center;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            border: 1px solid rgba(0,0,0,0.05);
-        }
-        
-        .feature-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-        }
-        
-        .feature-icon {
-            font-size: 3em;
-            margin-bottom: 20px;
-            color: var(--primary-color);
-        }
-        
-        .feature-title {
-            font-size: 1.4em;
-            font-weight: 600;
-            margin-bottom: 15px;
-            color: #2c3e50;
-        }
-        
-        .feature-desc {
-            color: #6c757d;
-            line-height: 1.6;
-        }
-        
-        .code-block {
-            background: #f8f9fa;
-            border: 1px solid #e9ecef;
-            border-radius: 10px;
-            padding: 20px;
-            margin: 20px 0;
+            transition: all var(--animation-speed) cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid rgba(102, 126, 234, 0.1);
             position: relative;
-            overflow-x: auto;
+            overflow: hidden;
         }
-        
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--gradient-primary);
+            transform: scaleX(0);
+            transition: transform var(--animation-speed) ease;
+        }
+
+        .feature-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-15px) scale(1.02);
+            box-shadow: var(--card-shadow-hover);
+            border-color: rgba(102, 126, 234, 0.2);
+        }
+
+        .feature-icon {
+            font-size: 3.5em;
+            margin-bottom: 25px;
+            background: var(--gradient-primary);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 2px 4px rgba(102, 126, 234, 0.3));
+        }
+
+        .feature-title {
+            font-size: 1.5em;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: var(--text-primary);
+            letter-spacing: -0.01em;
+        }
+
+        .feature-desc {
+            color: var(--text-secondary);
+            line-height: 1.7;
+            font-size: 1.1em;
+        }
+
+        .code-block {
+            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+            border: 1px solid #475569;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 25px 0;
+            position: relative;
+            overflow: hidden;
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.1);
+        }
+
         .code-block::before {
             content: '';
             position: absolute;
@@ -192,149 +377,306 @@
             left: 0;
             right: 0;
             height: 3px;
-            background: var(--gradient-bg);
+            background: var(--gradient-accent);
         }
-        
+
+        .code-block pre {
+            color: #e2e8f0;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 0.95em;
+            line-height: 1.6;
+        }
+
+        .code-block code {
+            color: #e2e8f0;
+        }
+
         .install-steps {
             counter-reset: step-counter;
+            margin: 40px 0;
         }
-        
+
         .install-step {
             counter-increment: step-counter;
-            background: white;
-            border: 2px solid #e9ecef;
-            border-radius: 15px;
-            padding: 25px;
-            margin: 20px 0;
+            background: linear-gradient(135deg, #fff 0%, #f8fafc 100%);
+            border: 2px solid #e2e8f0;
+            border-radius: var(--border-radius);
+            padding: 35px;
+            margin: 30px 0;
             position: relative;
-            transition: all 0.3s ease;
+            transition: all var(--animation-speed) ease;
+            overflow: hidden;
         }
-        
-        .install-step:hover {
-            border-color: var(--primary-color);
-            transform: translateX(5px);
-        }
-        
+
         .install-step::before {
             content: counter(step-counter);
             position: absolute;
-            left: -15px;
-            top: 15px;
-            background: var(--primary-color);
+            left: -20px;
+            top: 20px;
+            background: var(--gradient-primary);
             color: white;
-            width: 30px;
-            height: 30px;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: bold;
-            font-size: 0.9em;
+            font-size: 1.1em;
+            box-shadow: var(--card-shadow);
+            z-index: 1;
         }
-        
+
+        .install-step::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background: var(--gradient-primary);
+            transform: scaleY(0);
+            transition: transform var(--animation-speed) ease;
+        }
+
+        .install-step:hover {
+            border-color: var(--primary-color);
+            transform: translateX(10px);
+            box-shadow: var(--card-shadow);
+        }
+
+        .install-step:hover::after {
+            transform: scaleY(1);
+        }
+
         .alert {
-            padding: 20px;
-            border-radius: 10px;
-            margin: 20px 0;
-            border-left: 4px solid;
-            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 30px 0;
+            border-left: 5px solid;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
         }
-        
+
+        .alert::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: inherit;
+            opacity: 0.1;
+            z-index: -1;
+        }
+
         .alert-info {
             border-left-color: var(--primary-color);
-            background: #e3f2fd;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+            color: var(--text-primary);
         }
-        
+
         .alert-warning {
-            border-left-color: var(--warning-color);
-            background: #fff3e0;
+            border-left-color: #f59e0b;
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, rgba(251, 191, 36, 0.1) 100%);
+            color: var(--text-primary);
         }
-        
+
         .alert-success {
-            border-left-color: var(--secondary-color);
-            background: #e8f5e8;
+            border-left-color: var(--success-color);
+            background: linear-gradient(135deg, rgba(79, 172, 254, 0.1) 0%, rgba(0, 242, 254, 0.1) 100%);
+            color: var(--text-primary);
         }
-        
-        .footer {
-            background: #2c3e50;
+
+        h2 {
+            font-size: 2.5em;
+            font-weight: 700;
+            margin: 60px 0 30px 0;
+            color: var(--text-primary);
+            letter-spacing: -0.02em;
+            position: relative;
+            padding-bottom: 15px;
+        }
+
+        h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 60px;
+            height: 4px;
+            background: var(--gradient-primary);
+            border-radius: 2px;
+        }
+
+        h3 {
+            font-size: 1.8em;
+            font-weight: 600;
+            margin: 40px 0 20px 0;
+            color: var(--text-primary);
+        }
+
+        .table {
+            width: 100%;
+            margin: 30px 0;
+            border-collapse: collapse;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+            background: white;
+        }
+
+        .table th,
+        .table td {
+            padding: 18px 20px;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .table th {
+            background: var(--gradient-primary);
             color: white;
-            padding: 50px 0;
-            text-align: center;
-            margin-top: 50px;
+            font-weight: 600;
+            font-size: 1.1em;
         }
-        
+
+        .table-striped tbody tr:nth-child(even) {
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+        }
+
+        .table-striped tbody tr:hover {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+            transform: scale(1.01);
+            transition: all var(--animation-speed) ease;
+        }
+
+        .faq-item {
+            background: linear-gradient(135deg, #fff 0%, #f8fafc 100%);
+            border: 2px solid #e2e8f0;
+            border-radius: var(--border-radius);
+            padding: 30px;
+            margin: 25px 0;
+            transition: all var(--animation-speed) ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .faq-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background: var(--gradient-primary);
+            transform: scaleY(0);
+            transition: transform var(--animation-speed) ease;
+        }
+
+        .faq-item:hover {
+            box-shadow: var(--card-shadow);
+            transform: translateY(-5px);
+            border-color: var(--primary-color);
+        }
+
+        .faq-item:hover::before {
+            transform: scaleY(1);
+        }
+
+        .faq-item strong {
+            color: var(--primary-color);
+            font-size: 1.2em;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .footer {
+            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+            color: white;
+            padding: 80px 0 40px 0;
+            text-align: center;
+            margin-top: 80px;
+            position: relative;
+        }
+
+        .footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: var(--gradient-primary);
+        }
+
         .footer-content {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 30px;
-            margin-bottom: 30px;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 40px;
+            margin-bottom: 50px;
+            text-align: left;
         }
-        
+
         .footer-section h3 {
-            color: #3498db;
-            margin-bottom: 15px;
+            background: var(--gradient-accent);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 20px;
+            font-size: 1.3em;
         }
-        
+
         .footer-section a {
-            color: #bdc3c7;
+            color: #cbd5e1;
             text-decoration: none;
-            transition: color 0.3s ease;
+            transition: all var(--animation-speed) ease;
+            display: inline-block;
         }
-        
+
         .footer-section a:hover {
-            color: #3498db;
+            color: #67e8f9;
+            transform: translateX(5px);
         }
-        
+
+        .footer-section p {
+            margin: 10px 0;
+            color: #cbd5e1;
+            line-height: 1.6;
+        }
+
         .social-links {
             display: flex;
             justify-content: center;
-            gap: 20px;
-            margin-top: 20px;
+            gap: 25px;
+            margin: 40px 0;
         }
-        
+
         .social-links a {
-            display: inline-block;
-            width: 40px;
-            height: 40px;
-            background: #34495e;
-            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: background 0.3s ease;
-        }
-        
-        .social-links a:hover {
-            background: #3498db;
-        }
-        
-        @media (max-width: 768px) {
-            .hero h1 {
-                font-size: 2.5em;
-            }
-            
-            .hero-buttons {
-                flex-direction: column;
-                align-items: center;
-            }
-            
-            .markdown-body {
-                padding: 40px 30px;
-            }
-            
-            .feature-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-        
-        .scroll-to-top {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: var(--primary-color);
-            color: white;
             width: 50px;
             height: 50px;
+            background: var(--gradient-primary);
+            border-radius: 50%;
+            transition: all var(--animation-speed) ease;
+            font-size: 1.2em;
+        }
+
+        .social-links a:hover {
+            transform: translateY(-5px) scale(1.1);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .scroll-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: var(--gradient-primary);
+            color: white;
+            width: 60px;
+            height: 60px;
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -342,32 +684,266 @@
             text-decoration: none;
             opacity: 0;
             visibility: hidden;
-            transition: all 0.3s ease;
+            transition: all var(--animation-speed) ease;
             z-index: 1000;
+            box-shadow: var(--card-shadow);
         }
-        
+
         .scroll-to-top.show {
             opacity: 1;
             visibility: visible;
         }
-        
+
         .scroll-to-top:hover {
-            background: #1976d2;
-            transform: translateY(-2px);
+            transform: translateY(-5px) scale(1.1);
+            box-shadow: var(--card-shadow-hover);
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .hero {
+                padding: 80px 0;
+            }
+
+            .hero h1 {
+                font-size: 2.5em;
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn {
+                width: 100%;
+                max-width: 300px;
+                justify-content: center;
+            }
+
+            .markdown-body {
+                padding: 60px 30px;
+            }
+
+            .feature-grid {
+                grid-template-columns: 1fr;
+                gap: 25px;
+            }
+
+            .install-step {
+                padding: 25px;
+                margin-left: 20px;
+            }
+
+            .table {
+                font-size: 0.9em;
+            }
+
+            .table th,
+            .table td {
+                padding: 12px 10px;
+            }
+        }
+
+        /* 滚动条美化 */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--gradient-primary);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--gradient-secondary);
+        }
+
+        /* 加载动画 */
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-slide-up {
+            animation: slideInUp 0.6s ease-out forwards;
+        }
+
+        /* 鼠标悬停时的微交互 */
+        .feature-card, .install-step, .faq-item, .alert {
+            will-change: transform;
+        }
+
+        /* 文字选择美化 */
+        ::selection {
+            background: rgba(102, 126, 234, 0.2);
+            color: var(--text-primary);
+        }
+
+        /* 新增磨砂玻璃效果 */
+        .glass-effect {
+            backdrop-filter: blur(20px);
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        /* 粒子效果背景 */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -2;
+        }
+
+        .particle {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            animation: particleFloat 15s linear infinite;
+        }
+
+        @keyframes particleFloat {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.3;
+            }
+            90% {
+                opacity: 0.3;
+            }
+            100% {
+                transform: translateY(-100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* 鼠标跟随光标效果 */
+        .cursor-glow {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            background: radial-gradient(circle, rgba(102, 126, 234, 0.6) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 10000;
+            mix-blend-mode: difference;
+            transition: transform 0.1s ease-out;
+        }
+
+        /* 增强的按钮悬停效果 */
+        .btn {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s ease, height 0.6s ease;
+        }
+
+        .btn:active::after {
+            width: 300px;
+            height: 300px;
+        }
+
+        /* 加载进度条 */
+        .loading-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            background: var(--gradient-primary);
+            z-index: 10000;
+            transform-origin: left;
+            transform: scaleX(0);
+            animation: loadingProgress 2s ease-out forwards;
+        }
+
+        @keyframes loadingProgress {
+            0% { transform: scaleX(0); }
+            50% { transform: scaleX(0.7); }
+            100% { transform: scaleX(1); opacity: 0; }
+        }
+
+        /* 波纹效果 */
+        .ripple-effect {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.6);
+            transform: scale(0);
+            animation: ripple 0.6s linear;
+            pointer-events: none;
+        }
+
+        @keyframes ripple {
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+
+        /* 优化移动端体验 */
+        @media (max-width: 768px) {
+            .cursor-glow {
+                display: none;
+            }
+
+            .particles {
+                display: none;
+            }
+
+            .floating-icons {
+                display: none;
+            }
         }
     </style>
 </head>
 <body>
+    <div class="loading-bar"></div>
+    <div class="particles"></div>
+    <div class="cursor-glow"></div>
+
     <div class="hero">
+        <div class="floating-icons">
+            <div class="floating-icon"></div>
+            <div class="floating-icon"></div>
+            <div class="floating-icon"></div>
+            <div class="floating-icon"></div>
+        </div>
         <div class="container">
-            <h1><i class="fas fa-rocket"></i> Claude Code 使用指南</h1>
-            <p>快速、准确、强大的 AI 编程助手</p>
+            <h1><i class="fas fa-rocket"></i> Claude Code 完全使用指南</h1>
+            <p>三种方式解锁最强AI编程助手：3行环境变量解锁百款顶级AI模型 + 镜像站直连 + 官方合租方案</p>
             <div class="hero-buttons">
-                <a href="https://gaccode.cc/" class="btn btn-primary" target="_blank">
-                    <i class="fas fa-external-link-alt"></i> 访问镜像站
+                <a href="https://apipro.maynor1024.live" class="btn btn-primary" target="_blank">
+                    <i class="fas fa-key"></i> 获取API密钥
                 </a>
-                <a href="#installation" class="btn btn-secondary">
-                    <i class="fas fa-download"></i> 开始安装
+                <a href="https://gaccode.cc/" class="btn btn-secondary" target="_blank">
+                    <i class="fas fa-external-link-alt"></i> 镜像站直连
+                </a>
+                <a href="https://717ka.com/p/d1q6n6lycx1mw9c2l01pyquq" class="btn btn-secondary" target="_blank">
+                    <i class="fas fa-users"></i> 合租方案
                 </a>
             </div>
         </div>
@@ -376,227 +952,466 @@
     <div class="container">
         <div class="content">
             <div class="markdown-body">
+                <h2 id="contact-info"><i class="fas fa-phone"></i> 联系支持</h2>
+                <ul>
+                    <li><strong>微信客服</strong>: coder-maynor</li>
+                    <li><strong>QQ</strong>: 1002569303</li>
+                    <li><strong>网站</strong>：<a href="https://vlink.cc/maynorai" target="_blank">https://vlink.cc/maynorai</a></li>
+                </ul>
+
                 <h2 id="introduction"><i class="fas fa-info-circle"></i> 项目简介</h2>
-                <p>Claude Code 是一款革命性的 AI 编程助手，具有以下特点：</p>
-                
+                <p>Claude Code 是一款革命性的 AI 编程助手，相比其他 AI 编程工具（如 Cursor、Gemini CLI），具有以下优势：</p>
+
                 <div class="feature-grid">
                     <div class="feature-card">
                         <div class="feature-icon">
                             <i class="fas fa-bolt"></i>
                         </div>
-                        <div class="feature-title">快速响应</div>
-                        <div class="feature-desc">秒级生成代码和解决方案</div>
+                        <div class="feature-title">响应速度极快</div>
+                        <div class="feature-desc">几十秒内完成复杂任务</div>
                     </div>
                     <div class="feature-card">
                         <div class="feature-icon">
                             <i class="fas fa-bullseye"></i>
                         </div>
-                        <div class="feature-title">精准理解</div>
-                        <div class="feature-desc">准确理解开发需求和意图</div>
+                        <div class="feature-title">理解能力超强</div>
+                        <div class="feature-desc">精准理解复杂代码库和重构需求</div>
                     </div>
                     <div class="feature-card">
                         <div class="feature-icon">
-                            <i class="fas fa-cogs"></i>
+                            <i class="fas fa-medal"></i>
                         </div>
-                        <div class="feature-title">强大功能</div>
-                        <div class="feature-desc">支持代码生成、重构、调试等多种场景</div>
+                        <div class="feature-title">代码质量更高</div>
+                        <div class="feature-desc">生成的代码更加规范和可维护</div>
                     </div>
                     <div class="feature-card">
                         <div class="feature-icon">
                             <i class="fas fa-globe-asia"></i>
                         </div>
-                        <div class="feature-title">国内可用</div>
-                        <div class="feature-desc">通过镜像站无需魔法即可使用</div>
+                        <div class="feature-title">国内完美支持</div>
+                        <div class="feature-desc">三种方式突破网络限制</div>
                     </div>
                 </div>
 
-                <h2 id="comparison"><i class="fas fa-chart-line"></i> 对比优势</h2>
-                <p>相比其他 AI 编程工具（如 Cursor、Gemini CLI），Claude Code 在以下方面表现突出：</p>
-                <ul>
-                    <li><strong>响应速度更快</strong> - 几十秒内完成复杂任务</li>
-                    <li><strong>理解能力更强</strong> - 精准理解复杂代码库和重构需求</li>
-                    <li><strong>代码质量更高</strong> - 生成的代码更加规范和可维护</li>
-                    <li><strong>体验更流畅</strong> - 界面友好，操作简单</li>
-                </ul>
+                <h3><i class="fas fa-chart-line"></i> 使用场景对比</h3>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th><strong>使用场景</strong></th>
+                            <th><strong>官方限制</strong></th>
+                            <th><strong>本指南解决方案</strong></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>模型选择</strong></td>
+                            <td>只能用Claude</td>
+                            <td>支持GPT-4.1、Gemini、Grok等百款模型</td>
+                        </tr>
+                        <tr>
+                            <td><strong>网络要求</strong></td>
+                            <td>需要国外网络</td>
+                            <td>国内直连，速度飞快</td>
+                        </tr>
+                        <tr>
+                            <td><strong>成本控制</strong></td>
+                            <td>Claude价格昂贵</td>
+                            <td>成本降低50%以上</td>
+                        </tr>
+                    </tbody>
+                </table>
 
-                <h2 id="requirements"><i class="fas fa-server"></i> 系统要求</h2>
-                <div class="alert alert-info">
-                    <strong>在开始使用 Claude Code 之前，请确保您的系统满足以下要求：</strong>
-                    <ul>
-                        <li><strong>操作系统</strong>: macOS 10.15+ / Ubuntu 20.04+ / Debian 10+</li>
-                        <li><strong>Windows 用户</strong>: 需要在 WSL (Windows Subsystem for Linux) 上部署</li>
-                        <li><strong>Node.js</strong>: 18.0+ 版本</li>
-                    </ul>
+                <h2 id="methods"><i class="fas fa-cogs"></i> 三种使用方式</h2>
+                <p>本指南提供三种使用Claude Code的方式，您可以根据需求选择：</p>
+
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-code"></i>
+                        </div>
+                        <div class="feature-title">自定义API接入</div>
+                        <div class="feature-desc">通过环境变量接入第三方模型（更灵活）</div>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-link"></i>
+                        </div>
+                        <div class="feature-title">镜像站直连</div>
+                        <div class="feature-desc">通过国内镜像站使用（更简单）</div>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="feature-title">官方合租方案</div>
+                        <div class="feature-desc">多人共享正版账号（最经济）</div>
+                    </div>
                 </div>
 
-                <h2 id="installation"><i class="fas fa-download"></i> 安装教程</h2>
-                
+                <h2 id="method1"><i class="fas fa-code"></i> 方式一：自定义API接入</h2>
+                <p>通过3行环境变量，让Claude Code支持OpenAI、Gemini、Grok等百款顶级模型。</p>
+
                 <div class="install-steps">
                     <div class="install-step">
-                        <h3>注册账号</h3>
-                        <p>首先访问 Claude Code 镜像站并注册账号：</p>
-                        <div class="alert alert-success">
-                            <strong>Claude Code 镜像站</strong>: <a href="https://gaccode.cc/" target="_blank">https://gaccode.cc/</a>
-                        </div>
+                        <h3>系统要求</h3>
+                        <ul>
+                            <li>💻 系统：Mac / Linux / Windows (WSL)</li>
+                            <li>🔧 软件：Node.js 18+</li>
+                            <li>🔑 API密钥：<a href="https://apipro.maynor1024.live" target="_blank">https://apipro.maynor1024.live</a></li>
+                        </ul>
                     </div>
 
                     <div class="install-step">
-                        <h3>安装 Node.js 环境</h3>
-                        
-                        <h4>macOS 用户</h4>
+                        <h3>安装Node.js</h3>
+
+                        <h4>macOS用户：</h4>
                         <div class="code-block">
-                            <pre><code># 使用 Homebrew 安装
+                            <pre><code># 使用Homebrew
 brew install node
 
-# 或使用 nvm 安装
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
+# 或使用nvm
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
 nvm install 18
 nvm use 18</code></pre>
                         </div>
 
-                        <h4>Ubuntu/Debian 用户</h4>
+                        <h4>Linux用户：</h4>
                         <div class="code-block">
-                            <pre><code># 安装 Node.js 22.x
-curl -fsSL https://deb.nodesource.com/setup_22.x | sudo bash -
+                            <pre><code># Ubuntu/Debian
+sudo apt update
+curl -fsSL https://deb.nodesource.com/setup_18.x | sudo bash -
 sudo apt-get install -y nodejs</code></pre>
                         </div>
-
-                        <h4>验证安装</h4>
-                        <div class="code-block">
-                            <pre><code>node --version
-npm --version</code></pre>
-                        </div>
-                        <p>确保输出版本号为 18.0 或更高。</p>
                     </div>
 
                     <div class="install-step">
-                        <h3>安装 Claude Code</h3>
-                        
-                        <h4>卸载旧版本（如果存在）</h4>
+                        <h3>安装Claude Code</h3>
                         <div class="code-block">
-                            <pre><code>npm uninstall -g @anthropic-ai/claude-code</code></pre>
-                        </div>
+                            <pre><code># 全局安装
+npm install -g @anthropic-ai/claude-code
 
-                        <h4>安装镜像版本</h4>
-                        <div class="code-block">
-                            <pre><code>cd ~
-npm install -g https://gaccodecode.com/claudecode/install --registry=https://registry.npmmirror.com
+# 验证安装
 claude --version</code></pre>
                         </div>
                     </div>
-                </div>
 
-                <h2 id="usage"><i class="fas fa-play"></i> 使用方法</h2>
-                
-                <div class="install-steps">
                     <div class="install-step">
-                        <h3>创建项目目录</h3>
+                        <h3>配置自定义API</h3>
                         <div class="code-block">
-                            <pre><code>mkdir my-claude-project
-cd my-claude-project</code></pre>
+                            <pre><code># 设置环境变量（3行搞定）
+export ANTHROPIC_BASE_URL=https://apipro.maynor1024.live
+export ANTHROPIC_AUTH_TOKEN=sk-xxx  # 替换成你的API密钥
+
+# 启动Claude Code（可指定任意模型）
+claude --model gpt-4.1-mini</code></pre>
+                        </div>
+                        <div class="alert alert-warning">
+                            <strong>🎯 关键提醒</strong>：首次运行时会出现选择界面，必须选择第2选项：<strong>Anthropic Console account</strong>，否则无法自定义API模型。
+                        </div>
+                        <div class="alert alert-info">
+                            <img src="https://restname.oss-cn-hangzhou.aliyuncs.com/image-20250804115641241.png" alt="Claude Code 安装界面" style="width: 100%; max-width: 600px; border-radius: 10px;">
                         </div>
                     </div>
+                </div>
 
-                    <div class="install-step">
-                        <h3>启动 Claude Code</h3>
-                        <div class="code-block">
-                            <pre><code>claude</code></pre>
+                <p><strong>支持的模型包括：</strong></p>
+                <ul>
+                    <li>🤖 GPT-4.1 / GPT-4.1-mini</li>
+                    <li>💎 Gemini-2.5-Pro</li>
+                    <li>⚡ Grok-4</li>
+                    <li>🧠 O3</li>
+                    <li>🌟 DeepSeek等百款模型</li>
+                </ul>
+
+                <div class="alert alert-success">
+                    <strong>启动成功界面：</strong><br>
+                    <img src="https://restname.oss-cn-hangzhou.aliyuncs.com/image-20250804120151029.png" alt="Claude Code 启动界面" style="width: 100%; max-width: 600px; border-radius: 10px;"><br>
+                    执行成功后，会出现此界面，<strong>直接按回车键即可</strong>。
+                </div>
+
+                <h3><i class="fas fa-chart-bar"></i> 使用效果</h3>
+                <p>实测数据对比：</p>
+                <ul>
+                    <li>⚡ <strong>响应速度提升35%</strong></li>
+                    <li>💰 <strong>成本降低50%以上</strong></li>
+                    <li>✅ <strong>接口100%兼容</strong></li>
+                    <li>🎯 <strong>模型任意切换</strong></li>
+                </ul>
+
+                <h2 id="method2"><i class="fas fa-users"></i> 方式二：官方合租方案</h2>
+
+                <div class="alert alert-success">
+                    <strong>购买链接</strong>：<a href="https://717ka.com/p/d1q6n6lycx1mw9c2l01pyquq" target="_blank">https://717ka.com/p/d1q6n6lycx1mw9c2l01pyquq</a><br><br>
+                    <img src="https://github.com/user-attachments/assets/1c77b7ab-36b4-49f6-8af4-1f158a6eb726" alt="二维码" width="320" height="320" style="border-radius: 10px;">
+                </div>
+
+                <p>多人共享正版Claude Code账号，成本最低的使用方案。</p>
+
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-dollar-sign"></i>
                         </div>
+                        <div class="feature-title">超低成本</div>
+                        <div class="feature-desc">仅需¥388，相比官方价格节省75%以上</div>
                     </div>
-
-                    <div class="install-step">
-                        <h3>授权验证</h3>
-                        <p>首次运行时会跳转到浏览器进行授权：</p>
-                        <ol>
-                            <li>在浏览器中登录您的账号</li>
-                            <li>完成授权验证</li>
-                            <li>选择主题和配置选项</li>
-                            <li>允许 Claude Code 访问项目目录</li>
-                        </ol>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-user-friends"></i>
+                        </div>
+                        <div class="feature-title">4人共享</div>
+                        <div class="feature-desc">与其他3人共享账号，互不影响</div>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-tools"></i>
+                        </div>
+                        <div class="feature-title">专业服务</div>
+                        <div class="feature-desc">提供远程安装指导和使用教程</div>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <div class="feature-title">正版保障</div>
+                        <div class="feature-desc">官方正版账号，稳定不封</div>
                     </div>
                 </div>
 
-                <h2 id="subscription"><i class="fas fa-credit-card"></i> 订阅激活</h2>
-                <p>如果遇到需要订阅的提示，可以使用以下体验码：</p>
-                <div class="code-block">
-                    <pre><code>MCE8JH4P-VDFOD0
-MCE8JH4X-JN3F3S
-MCE8JH53-93U6FC</code></pre>
-                </div>
-                
-                <div class="alert alert-warning">
-                    <strong>激活步骤：</strong>
+                <h3><i class="fas fa-box"></i> 服务内容</h3>
+                <div class="alert alert-info">
+                    <strong>基础套餐（¥388）包含：</strong>
                     <ol>
-                        <li>访问 <a href="https://gaccode.cc/" target="_blank">Claude Code 镜像站</a></li>
-                        <li>进入 "管理订阅" 页面</li>
-                        <li>点击 "兑换优惠券"</li>
-                        <li>输入体验码完成激活</li>
+                        <li><strong>Claude Code正版账号共享</strong>
+                            <ul>
+                                <li>Opus模型完全可用</li>
+                                <li>Sonnet模型几乎无限使用</li>
+                                <li>支持所有官方功能</li>
+                            </ul>
+                        </li>
+                        <li><strong>技术支持服务</strong>
+                            <ul>
+                                <li>远程指导安装配置</li>
+                                <li>提供详细使用教程</li>
+                                <li>解决使用中的问题</li>
+                            </ul>
+                        </li>
+                        <li><strong>账号保障</strong>
+                            <ul>
+                                <li>稳定不封保证</li>
+                                <li>自建服务器部署</li>
+                                <li>4人小组使用，避免滥用</li>
+                            </ul>
+                        </li>
                     </ol>
                 </div>
 
+                <div class="install-steps">
+                    <div class="install-step">
+                        <h3>联系客服</h3>
+                        <ul>
+                            <li>添加微信：coder-maynor</li>
+                            <li>说明需要Claude Code合租服务</li>
+                        </ul>
+                    </div>
+                    <div class="install-step">
+                        <h3>支付费用</h3>
+                        <ul>
+                            <li>一次性支付¥388</li>
+                            <li>支持微信/支付宝</li>
+                        </ul>
+                    </div>
+                    <div class="install-step">
+                        <h3>等待开通</h3>
+                        <ul>
+                            <li>预计1-2小时内完成</li>
+                            <li>客服会远程协助安装</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="alert alert-warning">
+                    <strong>⚠️ 注意事项</strong>
+                    <ul>
+                        <li>合租账号仅限4人使用，请勿外传</li>
+                        <li>请合理使用，避免过度消耗</li>
+                        <li>如有违规使用，可能影响整组用户</li>
+                    </ul>
+                </div>
+
+                <h2 id="method3"><i class="fas fa-link"></i> 方式三：镜像站使用</h2>
+                <p>通过国内镜像站，无需配置即可直接使用。</p>
+
+                <div class="install-steps">
+                    <div class="install-step">
+                        <h3>注册账号</h3>
+                        <p>访问Claude Code镜像站：<a href="https://gaccode.cc/" target="_blank">https://gaccode.cc/</a></p>
+                    </div>
+
+                    <div class="install-step">
+                        <h3>安装镜像版本</h3>
+                        <div class="code-block">
+                            <pre><code># 卸载旧版本（如果存在）
+npm uninstall -g @anthropic-ai/claude-code
+
+# 安装镜像版本
+cd ~
+npm install -g https://gaccodecode.com/claudecode/install --registry=https://registry.npmmirror.com
+
+# 验证安装
+claude --version</code></pre>
+                        </div>
+                    </div>
+
+                    <div class="install-step">
+                        <h3>启动使用</h3>
+                        <div class="code-block">
+                            <pre><code># 创建项目目录
+mkdir my-project
+cd my-project
+
+# 启动Claude Code
+claude</code></pre>
+                        </div>
+                    </div>
+
+                    <div class="install-step">
+                        <h3>激活订阅</h3>
+                        <p>如需激活，可使用以下体验码：</p>
+                        <div class="code-block">
+                            <pre><code>MCE8JH4P-VDFOD0
+MCE8JH4X-JN3F3S
+MCE8JH53-93U6FC</code></pre>
+                        </div>
+                    </div>
+                </div>
+
                 <h2 id="tips"><i class="fas fa-lightbulb"></i> 使用技巧</h2>
-                
+
+                <h3><i class="fas fa-star"></i> 最佳实践</h3>
                 <div class="feature-grid">
                     <div class="feature-card">
                         <div class="feature-icon">
                             <i class="fas fa-code"></i>
                         </div>
                         <div class="feature-title">代码生成</div>
-                        <div class="feature-desc">详细描述需求，Claude Code 会生成完整的代码实现，支持多种编程语言和框架</div>
+                        <div class="feature-desc">详细描述需求，包含上下文；指定编程语言和框架；提供示例代码参考</div>
                     </div>
                     <div class="feature-card">
                         <div class="feature-icon">
                             <i class="fas fa-wrench"></i>
                         </div>
                         <div class="feature-title">代码重构</div>
-                        <div class="feature-desc">提供现有代码，说明重构目标，Claude Code 会保持文件名和变量一致性</div>
+                        <div class="feature-desc">提供完整的原始代码；明确说明重构目标；保持文件和变量命名一致性</div>
                     </div>
                     <div class="feature-card">
                         <div class="feature-icon">
                             <i class="fas fa-bug"></i>
                         </div>
                         <div class="feature-title">调试助手</div>
-                        <div class="feature-desc">提供错误信息和代码片段，获得详细的调试建议和解决方案</div>
+                        <div class="feature-desc">提供完整的错误信息；包含相关代码片段；说明预期行为</div>
+                    </div>
+                </div>
+
+                <h3><i class="fas fa-rocket"></i> 高级技巧</h3>
+
+                <div class="install-steps">
+                    <div class="install-step">
+                        <h3>模型选择（自定义API方式）</h3>
+                        <div class="code-block">
+                            <pre><code># 使用不同模型
+claude --model gpt-4.1          # 最强推理
+claude --model gemini-2.5-pro   # 平衡选择
+claude --model grok-4           # 快速响应</code></pre>
+                        </div>
+                    </div>
+
+                    <div class="install-step">
+                        <h3>项目配置</h3>
+                        <div class="code-block">
+                            <pre><code># 在项目根目录创建 .claude 配置文件
+echo "model=gpt-4.1" > .claude</code></pre>
+                        </div>
                     </div>
                 </div>
 
                 <h2 id="faq"><i class="fas fa-question-circle"></i> 常见问题</h2>
-                
+
                 <div class="faq-item">
-                    <strong>Q: Windows 用户如何安装？</strong>
-                    <p>A: Windows 用户需要先安装 WSL，然后在 WSL 环境中按照 Linux 安装步骤进行。</p>
-                </div>
-                
-                <div class="faq-item">
-                    <strong>Q: 授权失败怎么办？</strong>
-                    <p>A: 确保网络连接正常，不要使用代理，重新运行 <code>claude</code> 命令。</p>
-                </div>
-                
-                <div class="faq-item">
-                    <strong>Q: 如何获取更多体验码？</strong>
-                    <p>A: 访问 <a href="https://717ka.com/p/1xqz24eni937lycwlnq98ybz" target="_blank">https://717ka.com/p/1xqz24eni937lycwlnq98ybz</a> 获取最新体验码。</p>
-                </div>
-                
-                <div class="faq-item">
-                    <strong>Q: 远程服务器如何使用？</strong>
-                    <p>A: 复制命令行中的链接，在本地浏览器中打开并输入验证码。</p>
+                    <strong>Q: Windows用户如何安装？</strong>
+                    <p>A: Windows用户需要先安装WSL，然后在WSL环境中按照Linux步骤进行。</p>
                 </div>
 
+                <div class="faq-item">
+                    <strong>Q: 如何选择使用方式？</strong>
+                    <p>A: 需要灵活切换模型 → 选择自定义API方式；追求简单易用 → 选择镜像站方式；预算有限 → 选择官方合租方案</p>
+                </div>
+
+                <div class="faq-item">
+                    <strong>Q: 授权失败怎么办？</strong>
+                    <p>A: 1. 确保网络连接正常；2. 不要使用代理；3. 重新运行<code>claude</code>命令</p>
+                </div>
+
+                <div class="faq-item">
+                    <strong>Q: 如何降低使用成本？</strong>
+                    <p>A: 1. 使用自定义API方式，选择性价比更高的模型如gpt-4.1-mini；2. 选择官方合租方案，仅需¥388即可长期使用</p>
+                </div>
+
+                <h2 id="tech-principle"><i class="fas fa-cogs"></i> 技术原理</h2>
+
+                <h3>自定义API原理</h3>
+                <div class="code-block">
+                    <pre><code>Claude Code → API代理层 → 目标模型 → 响应转换 → Claude Code</code></pre>
+                </div>
+                <p>通过中间层转换，实现Claude协议与其他模型协议的完美兼容。</p>
+
+                <h3>镜像站原理</h3>
+                <p>通过国内CDN加速和智能路由，实现低延迟高可用的服务。</p>
+
                 <h2 id="contact"><i class="fas fa-phone"></i> 联系支持</h2>
-                <p>如需企业合作或技术支持，请联系：</p>
                 <ul>
                     <li><strong>微信客服</strong>: coder-maynor</li>
                     <li><strong>QQ</strong>: 1002569303</li>
+                    <li><strong>API获取</strong>: <a href="https://apipro.maynor1024.live" target="_blank">https://apipro.maynor1024.live</a></li>
                     <li><strong>镜像站</strong>: <a href="https://gaccode.cc/" target="_blank">https://gaccode.cc/</a></li>
                 </ul>
 
-                <h2 id="get-started"><i class="fas fa-rocket"></i> 开始使用</h2>
-                <div class="alert alert-success">
-                    <strong>恭喜您！现在可以开始使用 Claude Code 来提升您的编程效率了。</strong>
-                    <div class="code-block">
-                        <pre><code># 在项目目录中运行
-claude</code></pre>
+                <h2 id="summary"><i class="fas fa-trophy"></i> 总结</h2>
+                <p>通过本指南的三种方式，您可以：</p>
+
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-globe"></i>
+                        </div>
+                        <div class="feature-title">突破网络限制</div>
+                        <div class="feature-desc">国内直连使用</div>
                     </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-dollar-sign"></i>
+                        </div>
+                        <div class="feature-title">降低使用成本</div>
+                        <div class="feature-desc">成本减少50%以上</div>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-rocket"></i>
+                        </div>
+                        <div class="feature-title">提升开发效率</div>
+                        <div class="feature-desc">多模型随意切换</div>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <div class="feature-title">获得最佳体验</div>
+                        <div class="feature-desc">速度快、效果好</div>
+                    </div>
+                </div>
+
+                <div class="alert alert-success">
+                    <strong>🚀 选择最适合您的方式，立即开始使用Claude Code，让AI成为您的编程超级助手！</strong>
                 </div>
             </div>
         </div>
@@ -607,22 +1422,22 @@ claude</code></pre>
             <div class="footer-content">
                 <div class="footer-section">
                     <h3>快速链接</h3>
+                    <p><a href="https://apipro.maynor1024.live" target="_blank">获取API密钥</a></p>
                     <p><a href="https://gaccode.cc/" target="_blank">Claude Code 镜像站</a></p>
-                    <p><a href="#installation">安装教程</a></p>
-                    <p><a href="#usage">使用方法</a></p>
+                    <p><a href="https://717ka.com/p/d1q6n6lycx1mw9c2l01pyquq" target="_blank">合租方案</a></p>
                     <p><a href="#faq">常见问题</a></p>
                 </div>
                 <div class="footer-section">
                     <h3>联系我们</h3>
                     <p>微信客服: coder-maynor</p>
                     <p>QQ: 1002569303</p>
-                    <p>GitHub: <a href="https://github.com/xianyu110/claude-code" target="_blank">xianyu110/claude-code</a></p>
+                    <p>网站: <a href="https://vlink.cc/maynorai" target="_blank">https://vlink.cc/maynorai</a></p>
                 </div>
                 <div class="footer-section">
                     <h3>关于项目</h3>
-                    <p>Claude Code 是一款强大的 AI 编程助手</p>
-                    <p>快速、准确、易用</p>
-                    <p>专为开发者设计</p>
+                    <p>Claude Code 完全使用指南</p>
+                    <p>三种方式解锁最强AI编程助手</p>
+                    <p>成本降低50%以上，效率大幅提升</p>
                 </div>
             </div>
             <div class="social-links">
@@ -634,7 +1449,7 @@ claude</code></pre>
                 </a>
             </div>
             <p style="margin-top: 30px; opacity: 0.7;">
-                Made with ❤️ by Claude Code Community | 快速、准确、强大的 AI 编程助手
+                Made with ❤️ by Claude Code Community | Claude Code 完全使用指南：三种方式解锁最强AI编程助手
             </p>
         </div>
     </footer>
@@ -695,6 +1510,119 @@ claude</code></pre>
             card.style.opacity = '0';
             card.style.transform = 'translateY(20px)';
             card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+        });
+
+        // 创建粒子效果
+        function createParticles() {
+            const particlesContainer = document.querySelector('.particles');
+            const particleCount = 30;
+
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+
+                // 随机大小和位置
+                const size = Math.random() * 6 + 2;
+                particle.style.width = size + 'px';
+                particle.style.height = size + 'px';
+                particle.style.left = Math.random() * 100 + '%';
+
+                // 随机动画延迟
+                particle.style.animationDelay = Math.random() * 15 + 's';
+                particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
+
+                particlesContainer.appendChild(particle);
+            }
+        }
+
+        // 鼠标跟随效果
+        function initCursorGlow() {
+            const cursorGlow = document.querySelector('.cursor-glow');
+            let mouseX = 0, mouseY = 0;
+            let glowX = 0, glowY = 0;
+
+            document.addEventListener('mousemove', (e) => {
+                mouseX = e.clientX;
+                mouseY = e.clientY;
+            });
+
+            function animateGlow() {
+                glowX += (mouseX - glowX) * 0.1;
+                glowY += (mouseY - glowY) * 0.1;
+
+                cursorGlow.style.left = glowX - 10 + 'px';
+                cursorGlow.style.top = glowY - 10 + 'px';
+
+                requestAnimationFrame(animateGlow);
+            }
+
+            animateGlow();
+        }
+
+        // 视差滚动效果
+        function initParallax() {
+            window.addEventListener('scroll', () => {
+                const scrolled = window.pageYOffset;
+                const parallax = document.querySelector('.hero::before');
+                const floatingIcons = document.querySelectorAll('.floating-icon');
+
+                floatingIcons.forEach((icon, index) => {
+                    const speed = 0.5 + (index * 0.1);
+                    icon.style.transform = `translateY(${scrolled * speed}px)`;
+                });
+            });
+        }
+
+        // 增强的交互效果
+        function initInteractiveEffects() {
+            // 为按钮添加点击波纹效果
+            document.querySelectorAll('.btn').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    const ripple = document.createElement('span');
+                    const rect = this.getBoundingClientRect();
+                    const size = Math.max(rect.width, rect.height);
+                    const x = e.clientX - rect.left - size / 2;
+                    const y = e.clientY - rect.top - size / 2;
+
+                    ripple.style.width = ripple.style.height = size + 'px';
+                    ripple.style.left = x + 'px';
+                    ripple.style.top = y + 'px';
+                    ripple.classList.add('ripple-effect');
+
+                    this.appendChild(ripple);
+
+                    setTimeout(() => {
+                        ripple.remove();
+                    }, 600);
+                });
+            });
+
+            // 卡片倾斜效果
+            document.querySelectorAll('.feature-card, .install-step, .faq-item').forEach(card => {
+                card.addEventListener('mousemove', function(e) {
+                    const rect = this.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    const centerX = rect.width / 2;
+                    const centerY = rect.height / 2;
+                    const rotateX = (y - centerY) / 10;
+                    const rotateY = (centerX - x) / 10;
+
+                    this.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateZ(10px)`;
+                });
+
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) translateZ(0)';
+                });
+            });
+        }
+
+        // 页面加载完成后初始化所有效果
+        document.addEventListener('DOMContentLoaded', () => {
+            createParticles();
+            initCursorGlow();
+            initParallax();
+            initInteractiveEffects();
         });
     </script>
 </body>
