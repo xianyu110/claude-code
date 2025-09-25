@@ -133,53 +133,13 @@ claude --model gpt-4.1-mini
 
 ---
 
-## 📋 方式二：镜像站使用
+## 📋 方式二：官方合租方案
 
-通过国内镜像站，无需配置即可直接使用。
 
-### 🔧 安装步骤
+购买链接：https://717ka.com/p/d1q6n6lycx1mw9c2l01pyquq
 
-#### 1. 注册账号
+<img width="320" height="320" alt="image" src="https://github.com/user-attachments/assets/1c77b7ab-36b4-49f6-8af4-1f158a6eb726" />
 
-访问Claude Code镜像站：[https://gaccode.cc/](https://gaccode.cc/)
-
-#### 2. 安装镜像版本
-
-```bash
-# 卸载旧版本（如果存在）
-npm uninstall -g @anthropic-ai/claude-code
-
-# 安装镜像版本
-cd ~
-npm install -g https://gaccodecode.com/claudecode/install --registry=https://registry.npmmirror.com
-
-# 验证安装
-claude --version
-```
-
-#### 3. 启动使用
-
-```bash
-# 创建项目目录
-mkdir my-project
-cd my-project
-
-# 启动Claude Code
-claude
-```
-
-#### 4. 激活订阅
-
-如需激活，可使用以下体验码：
-```
-MCE8JH4P-VDFOD0
-MCE8JH4X-JN3F3S
-MCE8JH53-93U6FC
-```
-
----
-
-## 📋 方式三：官方合租方案
 
 多人共享正版Claude Code账号，成本最低的使用方案。
 
@@ -227,6 +187,54 @@ MCE8JH53-93U6FC
 - 合租账号仅限4人使用，请勿外传
 - 请合理使用，避免过度消耗
 - 如有违规使用，可能影响整组用户
+
+---
+
+## 📋 方式二：镜像站使用
+
+通过国内镜像站，无需配置即可直接使用。
+
+### 🔧 安装步骤
+
+#### 1. 注册账号
+
+访问Claude Code镜像站：[https://gaccode.cc/](https://gaccode.cc/)
+
+#### 2. 安装镜像版本
+
+```bash
+# 卸载旧版本（如果存在）
+npm uninstall -g @anthropic-ai/claude-code
+
+# 安装镜像版本
+cd ~
+npm install -g https://gaccodecode.com/claudecode/install --registry=https://registry.npmmirror.com
+
+# 验证安装
+claude --version
+```
+
+#### 3. 启动使用
+
+```bash
+# 创建项目目录
+mkdir my-project
+cd my-project
+
+# 启动Claude Code
+claude
+```
+
+#### 4. 激活订阅
+
+如需激活，可使用以下体验码：
+```
+MCE8JH4P-VDFOD0
+MCE8JH4X-JN3F3S
+MCE8JH53-93U6FC
+```
+
+
 
 ---
 
